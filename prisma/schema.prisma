@@ -1,0 +1,244 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum BatchStatus {
+  idle
+  queued
+  running
+  paused
+  cancelled
+  completed
+  failed
+}
+
+enum JobStatus {
+  pending
+  queued
+  running
+  done
+  failed
+  skipped
+}
+
+enum JobPhase {
+  parsing
+  fen_generation
+  engine_search
+  persisting
+}
+
+enum PlanItemType {
+  tactics
+  endgame
+  review
+  opening
+}
+
+model PlayerProfile {
+  id         String      @id @default(cuid())
+  username   String      @unique
+  avatarUrl  String?
+  country    String?
+  joinedAt   DateTime?
+  lastOnline DateTime?
+  title      String?
+  status     String?
+  ratingStats RatingStat[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  games      Game[]
+}
+
+model RatingStat {
+  id         String   @id @default(cuid())
+  category   String
+  rating     Int
+  best       Int?
+  last       Int?
+  profileId  String
+  profile    PlayerProfile @relation(fields: [profileId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Game {
+  id          String   @id @default(cuid())
+  gameId      String   @unique
+  pgn         String
+  endTime     DateTime
+  timeControl String
+  rated       Boolean
+  rules       String
+  white       String
+  black       String
+  result      String
+  profileId   String
+  profile     PlayerProfile @relation(fields: [profileId], references: [id])
+  analysisJob GameAnalysisJob?
+  analysis    GameAnalysisResult?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BatchRun {
+  id            String      @id @default(cuid())
+  status        BatchStatus @default(idle)
+  totalGames    Int         @default(0)
+  doneGames     Int         @default(0)
+  failedGames   Int         @default(0)
+  skippedGames  Int         @default(0)
+  currentGameId String?
+  planMinutes   Int         @default(30)
+  startedAt     DateTime?
+  updatedAt     DateTime    @updatedAt
+}
+
+model GameAnalysisJob {
+  id             String    @id @default(cuid())
+  status         JobStatus @default(pending)
+  phase          JobPhase  @default(parsing)
+  gameId         String    @unique
+  game           Game      @relation(fields: [gameId], references: [id])
+  batchRunId     String?
+  batchRun       BatchRun? @relation(fields: [batchRunId], references: [id])
+  startedAt      DateTime?
+  updatedAt      DateTime  @updatedAt
+  finishedAt     DateTime?
+  currentPlyIndex Int?
+  lastEventMessage String?
+  lastEventAt    DateTime?
+  events         JobEvent[]
+}
+
+model GameAnalysisResult {
+  id                   String   @id @default(cuid())
+  gameId               String   @unique
+  game                 Game     @relation(fields: [gameId], references: [id])
+  analysisPolicyVersion String
+  engineBuildId         String
+  mode                 String
+  blunders             Int
+  mistakes             Int
+  inaccuracies         Int
+  worstEvalDrop        Int
+  analyzedAt           DateTime
+  criticalMoments      CriticalMoment[]
+}
+
+model CriticalMoment {
+  id              String   @id @default(cuid())
+  gameAnalysisId  String
+  gameAnalysis    GameAnalysisResult @relation(fields: [gameAnalysisId], references: [id])
+  ply             Int
+  moveNumber      Int
+  san             String
+  fenBefore       String
+  fenAfter        String?
+  evalBefore      Int
+  evalAfter       Int
+  evalDrop        Int
+  bestMove        String
+  pv              String
+  phase           String
+}
+
+model WeaknessProfile {
+  id            String   @id @default(cuid())
+  profileId     String
+  profile       PlayerProfile @relation(fields: [profileId], references: [id])
+  tactics       Int
+  opening       Int
+  endgame       Int
+  strategy      Int
+  evalHistogram String
+  patterns      String
+  updatedAt     DateTime @updatedAt
+}
+
+model DailyPlan {
+  id          String   @id @default(cuid())
+  profileId   String
+  profile     PlayerProfile @relation(fields: [profileId], references: [id])
+  minutes     Int
+  createdAt   DateTime @default(now())
+  items       DailyPlanItem[]
+}
+
+model DailyPlanItem {
+  id         String      @id @default(cuid())
+  planId     String
+  plan       DailyPlan   @relation(fields: [planId], references: [id])
+  type       PlanItemType
+  title      String
+  minutes    Int
+  payload    String
+  completed  Boolean     @default(false)
+}
+
+model Puzzle {
+  id        String  @id
+  fen       String
+  moves     String
+  themes    String
+  rating    Int
+  createdAt DateTime @default(now())
+}
+
+model PuzzleAttempt {
+  id        String @id @default(cuid())
+  puzzleId  String
+  puzzle    Puzzle @relation(fields: [puzzleId], references: [id])
+  success   Boolean
+  createdAt DateTime @default(now())
+}
+
+model LeitnerBox {
+  id           String   @id @default(cuid())
+  puzzleId     String   @unique
+  puzzle       Puzzle   @relation(fields: [puzzleId], references: [id])
+  box          Int      @default(1)
+  lastReviewed DateTime?
+  nextReview   DateTime?
+}
+
+model EndgameDrill {
+  id        String @id @default(cuid())
+  title     String
+  fen       String
+  solution  String
+  source    String
+  createdAt DateTime @default(now())
+}
+
+model EndgameAttempt {
+  id         String @id @default(cuid())
+  drillId    String
+  drill      EndgameDrill @relation(fields: [drillId], references: [id])
+  success    Boolean
+  createdAt  DateTime @default(now())
+}
+
+model JobEvent {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       GameAnalysisJob @relation(fields: [jobId], references: [id])
+  type      String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model ApiCache {
+  id           String   @id @default(cuid())
+  url          String   @unique
+  etag         String?
+  lastModified String?
+  body         String
+  status       Int
+  updatedAt    DateTime @updatedAt
+}

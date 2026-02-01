@@ -1,0 +1,13 @@
+[
+  {
+    "gameId": "https://www.chess.com/game/live/123456789",
+    "endTime": "2024-01-12T20:30:00.000Z",
+    "timeControl": "600",
+    "rated": true,
+    "rules": "chess",
+    "white": "demo_user",
+    "black": "opponent1",
+    "result": "win",
+    "pgn": "[Event \"Live Chess\"]\n[Site \"Chess.com\"]\n[Date \"2024.01.12\"]\n[Round \"-\"]\n[White \"demo_user\"]\n[Black \"opponent1\"]\n[Result \"1-0\"]\n[TimeControl \"600\"]\n\n1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Nb8 10. d4 Nbd7 11. Nbd2 Bb7 12. Bc2 Re8 13. Nf1 Bf8 14. Ng3 g6 15. a4 c5 16. d5 c4 17. Be3 Qc7 18. Nh2 Nc5 19. Qf3 Nfd7 20. Ng4 Bg7 21. Nh6+ Bxh6 22. Bxh6 Qd8 23. axb5 axb5 24. b4 Rxa1 25. Rxa1 Na4 26. Bxa4 bxa4 27. Rxa4 Qf6 28. Qe3 Rc8 29. Ra7 Rb8 30. Qe2 Nb6 31. Be3 Nd7 32. Qb5 Bc8 33. Qc6 Qd8 34. Qxd6 Rb6 35. Bxb6 Qxb6 36. Qe7 Nf6 37. Qxf7+ Kh8 38. Qg7# 1-0"
+  }
+]
