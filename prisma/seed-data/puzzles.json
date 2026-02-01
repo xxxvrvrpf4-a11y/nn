@@ -1,0 +1,37 @@
+[
+  {
+    "id": "Lichess-001",
+    "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/1bB1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 3",
+    "moves": "c2c3 b4d6",
+    "themes": "opening,trapped-piece",
+    "rating": 900
+  },
+  {
+    "id": "Lichess-002",
+    "fen": "2kr3r/pp1n1ppp/2p1pn2/q7/3P4/2N2N2/PPQ2PPP/2KR1B1R w - - 2 12",
+    "moves": "c2c7",
+    "themes": "fork,advantage",
+    "rating": 1250
+  },
+  {
+    "id": "Lichess-003",
+    "fen": "r2q1rk1/pp2bppp/2n1bn2/2pp4/3P4/2N1PN2/PP2BPPP/R1BQ1RK1 w - - 4 8",
+    "moves": "c3d5 e6d5",
+    "themes": "opening,interference",
+    "rating": 1450
+  },
+  {
+    "id": "Lichess-004",
+    "fen": "8/8/2k5/5K2/6P1/8/8/8 w - - 0 1",
+    "moves": "g4g5",
+    "themes": "endgame,king-and-pawn",
+    "rating": 1100
+  },
+  {
+    "id": "Lichess-005",
+    "fen": "r1bq1rk1/ppp2ppp/2n5/3np3/3P4/2N1PN2/PP2BPPP/R1BQ1RK1 w - - 0 7",
+    "moves": "d4e5",
+    "themes": "opening,center",
+    "rating": 1350
+  }
+]

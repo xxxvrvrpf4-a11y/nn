@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Lucena Position (rook vs rook)",
+    "fen": "6k1/5ppp/8/8/8/5P2/5KPP/6R1 w - - 0 1",
+    "solution": "g1c1",
+    "source": "Public domain Lucena position"
+  },
+  {
+    "title": "Philidor Defense (rook endgame)",
+    "fen": "6k1/5ppp/8/8/8/6P1/5P1P/6K1 b - - 0 1",
+    "solution": "g8f8",
+    "source": "Public domain rook endgame pattern"
+  }
+]
